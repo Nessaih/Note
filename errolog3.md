@@ -21,7 +21,7 @@
 
 
 1. SPI按照如下代码配置
-```c
+```c++
 SPI_InitTypeDef  SPI_InitStructure; 
 
 SPI_Cmd(SPI1, DISABLE);
@@ -39,7 +39,7 @@ SPI_Cmd(SPI1, ENABLE);
 
 问题在于被注释掉的一行`//SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_2;//从机不必设置此值`;按照STM官方手册，作为从机确实是不用设置此值。但如果按照这么配置，`SPI1->CR1`的值应该为0xC2C0。会发现`SPI1->CR1`的值和我们预计的不同，导致出错。为什么设置的值和预计的不一致，可以看一下`SPI_Init`的具体实现，代码如下：
 
-```c
+```c++
 
 /**
 
@@ -103,7 +103,7 @@ void SPI_Init(SPI_TypeDef* SPIx, SPI_InitTypeDef* SPI_InitStruct)
 `stm32f10x_conf.h`文件中有定义`assert_param`宏,实际生效的为 `#define assert_param(expr) ((void)0)`
 
 
-```
+```C++
 #ifdef  USE_FULL_ASSERT
 
 /**
