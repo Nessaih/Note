@@ -127,9 +127,12 @@ void SPI_Init(SPI_TypeDef* SPIx, SPI_InitTypeDef* SPI_InitStruct)
 ```
 
 因此assert_param检测不了参数出错（宏定义没开），我们自己定义`SPI_InitStructure`是一个局部变量，数值是随机的（准确来说是栈中对应地址未清除的数据）。
+
 1. 当进行点名时，使用的栈空间较少，未使用的部分内存值是0，`SPI_InitStructure.SPI_BaudRatePrescaler`即使是上次未清除的数据，也还是0，配置SPI不会出错。
 2. 当进行抄表是，使用栈空间较多，局部变量`SPI_InitStructure.SPI_BaudRatePrescaler`的值很可能已经不是0（其对应的二进制也超过了BR[2:0]的位宽）,直接将结构体`SPI_InitStructure`的各变量直接相或时，会修改掉其他bit位。
-（1）修改了CPOL、CPHA（SPI的模式），数据虽然能传输到射频信息，但接收数据错误，因此射频发送数据出错。
-（2）修改了MSTR位，导致MSTR = 1（SPI主机模式），而NSS管脚由软件输出低。此时产生**主模式错误**,此错误导致SPE 位被复位。这将停止一切输出，并且关闭 SPI 接口。SPI关闭后，DMA的CNDTR寄存器无法减为0，阻塞查询此寄存器会导致看门狗复位。
+
+    （1）修改了CPOL、CPHA（SPI的模式），数据虽然能传输到射频信息，但接收数据错误，因此射频发送数据出错。
+
+    （2）修改了MSTR位，导致MSTR = 1（SPI主机模式），而NSS管脚由软件输出低。此时产生**主模式错误**,此错误导致SPE 位被复位。这将停止一切输出，并且关闭 SPI 接口。SPI关闭后，DMA的CNDTR寄存器无法减为0，阻塞查询此寄存器会导致看门狗复位。
 
 
