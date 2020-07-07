@@ -173,8 +173,10 @@ void spi_slave_send(INT8U *buff,INT16U len)
                                                //EN:            0    DMA1通道3开启
     //SPI-----------------------------------------------------------------------------------------
     SPI1->CR2 |= 0x02;                         //SPI1的DMA传输使能
-    while(DMA1->ISR & 0x200);                  //等待数据DMA数据传输完成
-    DMA1->IFCR &=  0xFFFFEFF;                  //清除传输完成标志
+    //实际用HK32测试发现TC标志置位后CNDTR不为0，导致无法正常使用，所以改为查询CNTDR计数器
+    //while(DMA1->ISR & 0x200);                //等待数据DMA数据传输完成
+    //DMA1->IFCR &=  0xFFFFEFF;                //清除传输完成标志
+    while(DMA1_Channel3->CNDTR);               //等待数据DMA数据传输完成
     SPI1->CR2 = 0;                             //SPI1的DMA传输使能关闭
     DMA1_Channel3->CCR = 0;                    //关闭DMA1通道3（MISO）
     while(!(SPI1->SR & 0x02));                 //等待最后一字节发送完毕▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲重点▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
