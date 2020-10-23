@@ -40,3 +40,32 @@
 
 ## Program flow chart
 
+[========]
+### Boot leader 流程图
+```flow
+st=>start: 开始
+op1=>operation: MCU初始化
+op2=>operation: 外设初始化
+op3=>operation: 读取外部FLASH升级参数：
+------------------------
+升级标志：upgrade_flag；
+厂商代码：Manufacturer；
+硬件版本：hversion；
+软件版本：sversion；
+升级包总页数：page_num；
+升级文件CRC32校验：file_crc；
+------------------------
+cond1=>condition: 检查upgrade_flag、Manufacturer是否需要升级?
+cond2=>condition: 检查文件CRC校验是否正确?
+op4=>operation: 将外部FLASH数据写入ROM中对应位置
+op5=>operation: 跳转至APP开始执行程序
+e=>end: 结束
+st->op1->op2->op3->cond1->cond2->op4->op5->e
+cond1(yes)->cond2
+cond1(no)->e
+cond2(yes)->op4
+cond2(no)->e
+```
+[========]
+
+
