@@ -8,10 +8,9 @@ Unix域提供了两种类型的套接口：字节流套接口(与TCP类似)和�
 
 1. Unix域套接口地址结构(在《sys/un.h>头文件中定义的Unix域套接口地址结构)
 ```C++
-struct sockaddr_un {
-    unsigned char   sun_len;  
-    unsigned short  sun_family;     /* AF_LOCAL */  
-             char   sun_path[108];  /* null-terminated pathname */
+struct sockaddr_un {  
+    unsigned short  sun_family;     /* AF_UNIX */  
+             char   sun_path[108];  /* pathname */
 };
 ```
 
@@ -44,10 +43,10 @@ typedef struct in_addr {
 } IN_ADDR;
 
 struct sockaddr_in {
-             short int sin_family;     /* Address family */
-    unsigned short int sin_port;       /* Port number */
-    struct in_addr     sin_addr;       /* Internet address */
-    unsigned char      sin_zero[8];    /* Same size as struct sockaddr */
+             short  sin_family;     /* Address family */
+    unsigned short  sin_port;       /* Port number */
+    struct in_addr  sin_addr;       /* Internet address */
+    unsigned char   sin_zero[8];    /* Same size as struct sockaddr */
 };
 ```
 * sin_family指代协议族，在socket编程中只能是AF_INET
