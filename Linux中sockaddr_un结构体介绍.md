@@ -11,7 +11,7 @@ Unix域提供了两种类型的套接口：字节流套接口(与TCP类似)和�
 struct sockaddr_un {
     unsigned char   sun_len;  
     unsigned short  sun_family;     /* AF_LOCAL */  
-             char   sun_path[104];  /* null-terminated pathname */
+             char   sun_path[108];  /* null-terminated pathname */
 };
 ```
 
